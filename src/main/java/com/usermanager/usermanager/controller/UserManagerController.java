@@ -1,7 +1,9 @@
 package com.usermanager.usermanager.controller;
 
 
+import com.usermanager.usermanager.Helper.Helper;
 import com.usermanager.usermanager.model.User;
+import com.usermanager.usermanager.request.UserRequestBody;
 import com.usermanager.usermanager.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,12 +19,15 @@ public class UserManagerController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    Helper helper;
+
    // Create Controller class for these operations(getById, GetAll, create record, update record, delete record, deleteall records)
     @PostMapping("/createUser")
-    public ResponseEntity<User> createUser(@RequestBody User user){
+    public ResponseEntity<User> createUser(@RequestBody UserRequestBody userRequestBody){
 
+        User user = helper.getUserDetails(userRequestBody.getUserManagerRequest());
         User createdUser = userService.createUser(user);
-
         return new ResponseEntity<>(createdUser, HttpStatus.OK);
     }
     @GetMapping("/getAllUsers")
@@ -47,14 +52,16 @@ public class UserManagerController {
     }
 
     @DeleteMapping("/removeUserById")
-    public ResponseEntity<Boolean> getUserById(@RequestBody User user){
+    public ResponseEntity<Boolean> getUserById(@RequestBody UserRequestBody userRequestBody){
+        User user = helper.getUserDetails(userRequestBody.getUserManagerRequest());
         boolean userRemoved = userService.deleteUser(user);
         return new ResponseEntity<>(userRemoved, HttpStatus.OK);
 
     }
 
     @PutMapping("/updateUserById")
-    public ResponseEntity<User> updateUserById(@RequestBody User user){
+    public ResponseEntity<User> updateUserById(@RequestBody UserRequestBody userRequestBody){
+        User user = helper.getUserDetails(userRequestBody.getUserManagerRequest());
         User updatedUser = userService.updateUser(user);
         return new ResponseEntity<>(updatedUser, HttpStatus.OK);
 
